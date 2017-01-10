@@ -3,6 +3,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'docker-integration-test'
 
 dependencyManagement {
     imports {
@@ -10,55 +11,15 @@ dependencyManagement {
     }
 }
 
-task startDocker(type: Exec, dependsOn: ':service:distDocker') {
-    def proj = project(':service')
-    commandLine "docker", "run", "-d", "-p18080:8080", "${proj.group}/${proj.name}:${proj.version}"
+dockerIntegrationTest {
+    imageName = 'service'
+    waitForText = 'camel-1'
+    readyTimeout = 20000
 
-    //store the output instead of printing to the console:
-    standardOutput = new ByteArrayOutputStream()
+    dependsOn ':service:distDocker'
 
-    //extension method stopTomcat.output() can be used to obtain the output:
-    ext.containerName = {
-        return standardOutput.toString()
-    }
-
-    doLast {
-        def id = startDocker.containerName().trim()
-        println("Checking ${id} for relevant line")
-        ProcessBuilder pb = new ProcessBuilder("docker", "logs", "-f", id)
-        pb.redirectErrorStream(true)
-        def process = pb.start()
-
-        InputStream stdout = process.getInputStream()
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stdout))
-
-        def line
-        while ((line = reader.readLine()) != null) {
-            println line
-            if (line.contains("camel-1")) {
-                println "Container is ready"
-                break
-            }
-        }
-
-        process.destroyForcibly()
-    }
-}
-
-task integrationTest(type: Test, dependsOn: "startDocker") {
     systemProperty 'docker-host', 'localhost'
     systemProperty 'docker-port', '18080'
-
-    include '**/*IT*'
-
-    beforeTest {
-        println(startDocker.containerName())
-        println(project(':service').version)
-    }
-
-    doLast {
-        new ProcessBuilder("docker", "rm", "-f", startDocker.containerName().trim()).start()
-    }
 }
 
 test {
