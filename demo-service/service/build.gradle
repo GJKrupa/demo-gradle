@@ -1,0 +1,59 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+    }
+}
+
+plugins {
+    id "io.spring.dependency-management" version "1.0.0.RC2"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'application'
+apply plugin: 'docker'
+
+dependencyManagement {
+    imports {
+        mavenBom 'uk.temp.xyz:commom-bom:1.0.0-SNAPSHOT'
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    compile 'org.apache.camel:camel-spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-actuator'
+    compile 'org.apache.camel:camel-servlet'
+    compile 'org.apache.camel:camel-jackson'
+    compile 'org.apache.camel:camel-jetty9'
+    compile 'org.apache.camel:camel-swagger'
+
+    compile project(':service-dto')
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework:spring-test'
+    testCompile 'junit:junit'
+}
+
+docker {
+    baseImage "java:8u40"
+    maintainer 'Gerard Krupa "gerard.krupa@gmail.com"'
+}
+
+distDocker {
+    exposePort 8080
+}
+
+startScripts {
+    mainClassName = "uk.temp.xyz.service.DemoServiceApplication"
+    defaultJvmOpts = ['-Djava.security.egd=file:/dev/./urandom']
+}

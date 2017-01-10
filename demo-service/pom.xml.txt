@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>uk.temp.xyz</groupId>
+		<artifactId>plugin-parent</artifactId>
+		<version>1.0.0-RELEASE</version>
+	</parent>
+	<groupId>uk.temp.xyz.service</groupId>
+	<artifactId>demo-service-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	
+	<name>Demo Service Project</name>
+	<description>Multi-module project for demo service</description>
+	<url>${api.site.base}/${project.artifactId}</url>
+	
+	<organization>
+		<name></name>
+		<url></url>
+	</organization>
+	<scm>
+		<connection>scm:git:${scm.base}/demo-service.git</connection>
+		<developerConnection>scm:git:${scm.base}/demo-service.git</developerConnection>
+		<url>${scm.view.base}/demo-service.git</url>
+	</scm>
+	<ciManagement>
+	</ciManagement>
+
+	<developers>
+		<developer>
+		</developer>
+	</developers>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+	  <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>uk.temp.xyz.common</groupId>
+                <artifactId>common-bom</artifactId>
+                <version>1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+	<modules>
+		<module>service</module>
+		<module>service-docker</module>
+		<module>service-test</module>
+	</modules>
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+	    <plugin>
+        	<groupId>org.codehaus.mojo</groupId>
+        	<artifactId>properties-maven-plugin</artifactId>
+        	<version>1.0.0</version>
+        	<executions>
+          		<execution>
+          		<phase>initialize</phase>
+            		<goals>
+              			<goal>set-system-properties</goal>
+            		</goals>
+            		<configuration>
+              			<properties>
+                			<property>
+                  				<name>java.io.tmpdir</name>
+                  				<value>${user.home}</value>
+                			</property>
+              			</properties>
+            		</configuration>
+          		</execution>
+        	</executions>
+      	</plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

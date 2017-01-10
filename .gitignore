@@ -1,0 +1,9 @@
+*.ipr
+*.iml
+build/
+.gradle/
+libs/
+.*DS_Store*
+*.swp
+target/
+.idea/

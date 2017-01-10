@@ -1,0 +1,73 @@
+plugins {
+    id "io.spring.dependency-management" version "1.0.0.RC2"
+}
+
+apply plugin: 'java'
+
+dependencyManagement {
+    imports {
+        mavenBom 'uk.temp.xyz:commom-bom:1.0.0-SNAPSHOT'
+    }
+}
+
+task startDocker(type: Exec, dependsOn: ':service:distDocker') {
+    def proj = project(':service')
+    commandLine "docker", "run", "-d", "-p18080:8080", "${proj.group}/${proj.name}:${proj.version}"
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method stopTomcat.output() can be used to obtain the output:
+    ext.containerName = {
+        return standardOutput.toString()
+    }
+
+    doLast {
+        def id = startDocker.containerName().trim()
+        println("Checking ${id} for relevant line")
+        ProcessBuilder pb = new ProcessBuilder("docker", "logs", "-f", id)
+        pb.redirectErrorStream(true)
+        def process = pb.start()
+
+        InputStream stdout = process.getInputStream()
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stdout))
+
+        def line
+        while ((line = reader.readLine()) != null) {
+            println line
+            if (line.contains("camel-1")) {
+                println "Container is ready"
+                break
+            }
+        }
+
+        process.destroyForcibly()
+    }
+}
+
+task integrationTest(type: Test, dependsOn: "startDocker") {
+    systemProperty 'docker-host', 'localhost'
+    systemProperty 'docker-port', '18080'
+
+    include '**/*IT*'
+
+    beforeTest {
+        println(startDocker.containerName())
+        println(project(':service').version)
+    }
+
+    doLast {
+        new ProcessBuilder("docker", "rm", "-f", startDocker.containerName().trim()).start()
+    }
+}
+
+test {
+    exclude '**/*IT*'
+}
+
+dependencies {
+    testCompile 'io.rest-assured:rest-assured'
+    testCompile 'junit:junit'
+    compile 'ch.qos.logback:logback-classic'
+    compile 'commons-logging:commons-logging-api'
+}

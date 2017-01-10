@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>uk.temp.xyz.service</groupId>
+        <artifactId>demo-service-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+        <groupId>uk.temp.xyz.service</groupId>
+	<artifactId>demo-service-test</artifactId>
+	<packaging>jar</packaging>
+
+	<name>demo-service-test</name>
+	<description>Service test for demo service</description>
+	<dependencies>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+        </dependency>
+    </dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.16.8</version>
+				<extensions>true</extensions>
+				<configuration>
+					<logDate>default</logDate>
+					<autoPull>false</autoPull>
+					<images>
+						<!-- Image holding the artifact of this build -->
+						<image>
+							<!-- Alias name which can used for linking containers during runtime -->
+							<alias>service</alias>
+							<name>${docker.image.base}/fred/demo-service-docker:${project.version}</name>
+
+
+
+							<!-- ............................................................... -->
+							<!-- Runtime configuration for starting/stopping/linking containers -->
+							<!-- ............................................................... -->
+							<run>
+								<!-- Assign dynamically mapped ports to maven variables (which can be reused in integration tests) -->
+								<ports>
+									<port>18080:8080</port>
+								</ports>
+								<wait>
+									<!-- Check for this URL to return a 200 return code .... -->
+									<log>(camel-1\) started)</log>
+
+									<!-- ... but at max 10 seconds -->
+									<time>30000</time>
+								</wait>
+								<log>
+									<prefix>SpringBoot</prefix>
+									<color>cyan</color>
+								</log>
+
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>run-container</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop-container</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- Skips unit tests if the value of skip.unit.tests property is true -->
+					<skipTests>${skip.unit.tests}</skipTests>
+					<!-- Excludes integration tests when unit tests are run -->
+					<excludes>
+						<exclude>**/IT*.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>2.19.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+</project>

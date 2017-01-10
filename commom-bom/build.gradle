@@ -1,0 +1,98 @@
+plugins {
+    id "io.spring.dependency-management" version "1.0.0.RC2"
+}
+
+apply plugin: 'maven-publish'
+
+group = 'uk.temp.xyz'
+version = '1.0.0-SNAPSHOT'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom.packaging = 'pom'
+        }
+    }
+}
+
+dependencyManagement {
+    dependencies {
+        dependencySet(group:'org.springframework.boot', version: '1.3.7.RELEASE') {
+            entry 'spring-boot'
+            entry 'spring-boot-autoconfigure'
+            entry 'spring-boot-starter'
+            entry 'spring-boot-starter-jetty'
+            entry 'spring-boot-starter-web'
+            entry 'spring-boot-starter-actuator'
+            entry 'spring-boot-actuator'
+            entry 'spring-boot-starter-logging'
+            entry 'spring-boot-starter-test'
+        }
+
+        dependencySet(group: 'org.springframework', version: '4.2.7.RELEASE') {
+            entry 'spring-test'
+            entry 'spring-beans'
+            entry 'spring-core'
+            entry 'spring-context'
+            entry 'spring-webmvc'
+            entry 'spring-web'
+        }
+
+        dependencySet(group: 'org.apache.camel', version: '2.18.0') {
+            entry 'camel'
+            entry 'camel-test'
+            entry 'camel-test-spring'
+            entry 'camel-http'
+            entry 'camel-http4'
+            entry 'camel-servlet'
+            entry 'camel-jetty'
+            entry 'camel-jetty9'
+            entry 'camel-spark-rest'
+            entry 'camel-swagger'
+            entry 'camel-spring-boot-starter'
+            entry 'camel-spring-boot'
+            entry 'camel-restlet'
+            entry 'spi-annotations'
+            entry 'camel-cxf'
+            entry 'camel-spring-ws'
+            entry 'camel-spring-javaconfig'
+            entry 'camel-metrics'
+            entry 'camel-dozer'
+            entry 'camel-jaxb'
+            entry 'camel-xstream'
+            entry 'camel-aws'
+
+        }
+
+        // Earlier version due to Jackson conflict with logstash and Spring/Spring Boot
+        dependencySet(group: 'org.apache.camel', version: '2.16.3') {
+            entry 'camel-jackson'
+            entry 'camel-swagger-java'
+        }
+
+        dependencySet(group: 'ch.qos.logback', version: '1.1.7') {
+            entry 'logback-core'
+            entry 'logback-classic'
+            entry 'slf4j-api'
+        }
+
+        dependencySet(group: 'io.dropwizard.metric', version: '3.1.2') {
+            entry 'metrics-core'
+            entry 'metrics-graphite'
+        }
+
+        dependencySet(group: 'com.amazonaws', version: '1.10.12') {
+            entry 'aws-java-sdk'
+            entry 'aws-java-sdk-route53'
+        }
+
+        dependencySet(group: 'com.netflix.hystrix', version: '1.5.8') {
+            entry 'hystrix-core'
+            entry 'hystrix-javanica'
+        }
+
+        dependency 'junit:junit:4.11'
+        dependency 'io.rest-assured:rest-assured:3.0.1'
+        dependency 'commons-logging:commons-logging-api:1.1'
+    }
+}

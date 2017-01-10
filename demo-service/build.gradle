@@ -1,0 +1,11 @@
+subprojects {
+
+    group = 'uk.temp.xyz'
+    version = '1.0.0-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+    }
+}
