@@ -18,7 +18,7 @@ dockerIntegrationTest {
 
     dependsOn ':service:distDocker'
 
-    systemProperty 'docker-host', 'localhost'
+    systemProperty 'docker-host', '192.168.99.100'
     systemProperty 'docker-port', '18080'
 }
 
@@ -32,3 +32,4 @@ dependencies {
     compile 'ch.qos.logback:logback-classic'
     compile 'commons-logging:commons-logging-api'
 }
+
