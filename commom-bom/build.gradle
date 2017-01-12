@@ -28,6 +28,8 @@ task build {
     // No-op
 }
 
+afterReleaseBuild.dependsOn publishToMavenLocal
+
 dependencyManagement {
     dependencies {
         dependencySet(group:'org.springframework.boot', version: '1.3.7.RELEASE') {
