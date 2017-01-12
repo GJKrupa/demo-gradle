@@ -16,9 +16,6 @@ plugins {
 apply plugin: 'maven-publish'
 apply plugin: 'net.researchgate.release'
 
-group = 'uk.temp.xyz'
-version = '1.0.0-SNAPSHOT'
-
 publishing {
     publications {
         maven(MavenPublication) {
