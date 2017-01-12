@@ -20,3 +20,5 @@ subprojects {
 }
 
 task build(dependsOn: [':service-test:dockerIntegrationTest'])
+
+afterReleaseBuild.dependsOn [':service-dto:publishToMavenLocal', ':service:publishToMavenLocal']
