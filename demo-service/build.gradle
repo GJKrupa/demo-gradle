@@ -18,3 +18,5 @@ subprojects {
         mavenCentral()
     }
 }
+
+task build(dependsOn: [':service-test:dockerIntegrationTest'])
