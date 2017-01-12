@@ -23,6 +23,7 @@ dependencyManagement {
 publishing {
     publications {
         maven(MavenPublication) {
+            println(components)
             from components.java
         }
     }
