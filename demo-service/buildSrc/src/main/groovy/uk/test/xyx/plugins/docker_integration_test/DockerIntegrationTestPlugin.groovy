@@ -1,3 +1,5 @@
+package uk.test.xyx.plugins.docker_integration_test
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

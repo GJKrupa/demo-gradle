@@ -1,3 +1,5 @@
+package uk.test.xyx.plugins.docker_integration_test
+
 import org.gradle.api.tasks.testing.Test
 
 import java.util.concurrent.TimeUnit

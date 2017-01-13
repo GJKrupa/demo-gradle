@@ -3,9 +3,11 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
+        mavenCentral()
     }
     dependencies {
         classpath 'net.researchgate:gradle-release:2.4.0'
+        classpath 'org.owasp:dependency-check-gradle:1.4.4'
     }
 }
 
@@ -17,6 +19,8 @@ subprojects {
         jcenter()
         mavenCentral()
     }
+    apply plugin: 'org.owasp.dependencycheck'
+    apply plugin: 'explicit-dependencies'
 }
 
 task build(dependsOn: [':service-test:dockerIntegrationTest'])

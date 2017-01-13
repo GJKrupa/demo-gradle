@@ -31,5 +31,8 @@ dependencies {
     testCompile 'junit:junit'
     compile 'ch.qos.logback:logback-classic'
     compile 'commons-logging:commons-logging-api'
+
+    compile 'ch.qos.logback:logback-core:1.1.7'
+    compile 'org.slf4j:slf4j-api:1.7.20'
 }
 
