@@ -16,7 +16,7 @@ dockerIntegrationTest {
     waitForText = 'camel-1'
     readyTimeout = 20000
 
-    dependsOn ':service:distDocker'
+    dependsOn ':service:docker'
 
     systemProperty 'docker-host', '192.168.99.100'
     systemProperty 'docker-port', '18080'
